@@ -129,14 +129,14 @@ var updateAbal = function(){
     var options = {
         method: 'POST',
         url: 'https://bots.discord.pw/api/bots/'+bot.user.id+'/stats',
-         headers: {
+        headers: {
             'Content-Type': 'application/json',
             'Authorization': config.abal
            },
         body: JSON.stringify({'server_count': bot.servers.length})
     };
 
-    request_two(options, function(error, response, body) {
+    request(options, function(error, response, body) {
         if (error) console.log(error);
         //console.log(response);
         console.log(body);
