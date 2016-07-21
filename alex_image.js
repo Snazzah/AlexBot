@@ -48,7 +48,7 @@ function findUrls( text ) {
 }
 
 bot.on('message', msg => {
-    if (msg.content.startsWith("<@193898948912480267> invite") || msg.content.startsWith("<@!193898948912480267> invite")) {
+    if (msg.content.startsWith("<@"+bot.user.id+"> invite") || msg.content.startsWith("<@!"+bot.user.id+"> invite")) {
         bot.sendMessage(msg, "Invite me: https://u.1536.cf/alexinvite");
     }
     if(msg.attachments[0]) {
@@ -115,7 +115,7 @@ var updateAbal = function(){
     //console.log(bot.servers.length);
     var options = {
         method: 'POST',
-        url: 'https://bots.discord.pw/api/bots/193898948912480267/stats',
+        url: 'https://bots.discord.pw/api/bots/'+bot.user.id+'/stats',
          headers: {
             'Content-Type': 'application/json',
             'Authorization': config.abal
