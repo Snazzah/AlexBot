@@ -73,7 +73,7 @@ bot.on('message', msg => {
 
 bot.on('serverNewMember', (server, member) => {
     if (server.defaultChannel.permissionsOf(bot.user).hasPermission("manageMessages")) {
-        var stream = request(url).pipe(fs.createWriteStream('temp.jpg'));
+        var stream = request(member.avatarUrl).pipe(fs.createWriteStream('temp.jpg'));
         stream.on('finish', function() {
             fs.readFile("temp.jpg", 'binary', function(err, original_data){
             fs.writeFile('image_orig.jpg', original_data, 'binary', function(err) {});
