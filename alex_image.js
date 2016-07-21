@@ -28,8 +28,12 @@ function checkImage(url, msg){
         fs.writeFile('image_orig.jpg', original_data, 'binary', function(err) {});
         var base64Image = new Buffer(original_data, 'binary').toString('base64');
         indico.contentFiltering(base64Image)
-          .then(res => {response(res, msg)})
-          .catch(console.log);
+          .then(res => {
+              if (res > 0.44) {
+                  bot.deleteMessage(msg);
+                  dealWithUser(msg);
+              }  
+          }).catch(console.log);
         });
     });
 }
@@ -41,8 +45,7 @@ function findUrls( text ) {
     var matchArray;
     var regexToken = /(((ftp|https?):\/\/)[\-\w@:%_\+.~#?,&\/\/=]+)|((mailto:)?[_.\w-]+@([\w][\w\-]+\.)+[a-zA-Z]{2,3})/g;    
     while( (matchArray = regexToken.exec( source )) !== null ) {
-        var token = matchArray[0];
-        urlArray.push( token );
+        urlArray.push( matchArray[0] );
     }
     return urlArray;
 }
@@ -68,6 +71,24 @@ bot.on('message', msg => {
     }
 });
 
+bot.on('serverNewMember', (server, member) => {
+    if (server.defaultChannel.permissionsOf(bot.user).hasPermission("manageMessages")) {
+        var stream = request(url).pipe(fs.createWriteStream('temp.jpg'));
+        stream.on('finish', function() {
+            fs.readFile("temp.jpg", 'binary', function(err, original_data){
+            fs.writeFile('image_orig.jpg', original_data, 'binary', function(err) {});
+            var base64Image = new Buffer(original_data, 'binary').toString('base64');
+            indico.contentFiltering(base64Image)
+              .then(res => {
+                  if (res > 0.44) {
+                      bot.kickMember(member, server);
+                  }
+              }).catch(console.log);
+            });
+        });
+    }
+});
+
 function dealWithUser(msg) {
     var db = new JsonDB("users", true, true);
     var details = {};
@@ -88,14 +109,6 @@ function dealWithUser(msg) {
     }
     if (details['offences'] > 2) {
         bot.kickMember(msg.author, msg.server);
-    }
-}
-
-function response(res, msg) {
-    console.log(res);
-    if (res > 0.44) {
-        bot.deleteMessage(msg);
-        dealWithUser(msg);
     }
 }
 
