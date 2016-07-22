@@ -143,5 +143,27 @@ var updateAbal = function(){
     });
 }
 
+var updateCarbon = function(){
+    console.log("updating carbon");
+    //console.log(bot.servers.length);
+    var options = {
+        method: 'POST',
+        url: 'https://www.carbonitex.net/discord/data/botdata.php',
+         headers: {
+            'cache-control': 'no-cache',
+            'content-type': 'application/json'
+           },
+        formData: {
+            key: config.carbonKey,
+            servercount: bot.servers.length
+        }
+    };
+
+    request_two(options, function(error, response, body) {
+        if (error) console.log(error);
+        //console.log(response);
+        console.log(body);
+    });
+}
 
 bot.loginWithToken(config.token);
