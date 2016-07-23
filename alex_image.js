@@ -82,6 +82,7 @@ bot.on('serverNewMember', (server, member) => {
               .then(res => {
                   if (res > 0.44) {
                       bot.kickMember(member, server);
+                      bot.sendMessage(member, "You have been autokicked from "+server.name+" due to an NSFW avatar");
                   }
               }).catch(console.log);
             });
@@ -100,12 +101,12 @@ function dealWithUser(msg) {
     }
     details['offences'] = details['offences']+1;
     db.push('/user/'+msg.author.id, details);
-    bot.sendMessage(msg, "PORN DETECTED!!! offence #"+details['offences'] + " for " + msg.author.mention()); 
+    bot.sendMessage(msg, "PORN DETECTED!!! offence #"+details['offences'] + " for " + msg.author.mention(), (err, message) => {bot.deleteMessage(message, {"wait": 5000});}); 
     if (details['offences'] == 1) {
-        bot.sendMessage(msg, msg.author.mention() + " please do not post NSFW content kthxbye");
+        bot.sendMessage(msg, msg.author.mention() + " please do not post NSFW content kthxbye", (err, message) => {bot.deleteMessage(message, {"wait": 5000}););
     }
     if (details['offences'] == 2) {
-        bot.sendMessage(msg, msg.author.mention() + " if you post one more NSFW image i will kick you!");
+        bot.sendMessage(msg, msg.author.mention() + " if you post one more NSFW image i will kick you!", (err, message) => {bot.deleteMessage(message, {"wait": 5000}););
     }
     if (details['offences'] > 2) {
         bot.kickMember(msg.author, msg.server);
