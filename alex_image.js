@@ -27,14 +27,15 @@ function checkImage(url, msg){
         fs.readFile("temp.jpg", 'binary', function(err, original_data){
         fs.writeFile('image_orig.jpg', original_data, 'binary', function(err) {});
         var base64Image = new Buffer(original_data, 'binary').toString('base64');
-        indico.contentFiltering(base64Image)
-          .then(res => {
-              if (res > 0.44) {
-                  bot.deleteMessage(msg);
-                  dealWithUser(msg);
-              }  
+        try {
+          indico.contentFiltering(base64Image).then(res => {
+            if (res > 0.44) {
+              bot.deleteMessage(msg);
+              dealWithUser(msg);
+            }
           }).catch(console.log);
-        });
+        } catch (err) {}
+      });
     });
 }
 
