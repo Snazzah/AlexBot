@@ -125,47 +125,4 @@ bot.on("serverDeleted", server => {
     updateAbal();
 });
 
-var updateAbal = function(){
-    console.log("updating carbon");
-    //console.log(bot.servers.length);
-    var options = {
-        method: 'POST',
-        url: 'https://bots.discord.pw/api/bots/'+bot.user.id+'/stats',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': config.abal
-           },
-        body: JSON.stringify({'server_count': bot.servers.length})
-    };
-
-    request(options, function(error, response, body) {
-        if (error) console.log(error);
-        //console.log(response);
-        console.log(body);
-    });
-}
-
-var updateCarbon = function(){
-    console.log("updating carbon");
-    //console.log(bot.servers.length);
-    var options = {
-        method: 'POST',
-        url: 'https://www.carbonitex.net/discord/data/botdata.php',
-         headers: {
-            'cache-control': 'no-cache',
-            'content-type': 'application/json'
-           },
-        formData: {
-            key: config.carbonKey,
-            servercount: bot.servers.length
-        }
-    };
-
-    request_two(options, function(error, response, body) {
-        if (error) console.log(error);
-        //console.log(response);
-        console.log(body);
-    });
-}
-
 bot.loginWithToken(config.token);
